@@ -6,8 +6,6 @@ import os
 
 load_dotenv()
 
-api_key = "9ec1418c0976ea68fcf8ef36b99f59f4"
-
 
 window = Tk()
 window.title("")
@@ -28,10 +26,10 @@ def update_time():
     clock_label.configure(text = current_time)
     clock_label.after(80, update_time)
 
-# def update_date():
-#     current_date = today.strftime("%d-%b-%Y")
-#     date_label.configure(text = current_date)
-#     date_label.after(80, update_date)
+def update_date():
+    current_date = today.strftime("%d-%b-%Y")
+    date_label.configure(text = current_date)
+    date_label.after(80, update_date)
 
 print('Today ' + today.strftime("%d-%b-%Y"))
 
@@ -39,5 +37,5 @@ print('Today ' + today.strftime("%d-%b-%Y"))
 
 
 update_time()
-# update_date()
+update_date()
 window.mainloop()
