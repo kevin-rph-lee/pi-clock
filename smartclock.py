@@ -37,5 +37,8 @@ print('Today ' + today.strftime("%d-%b-%Y"))
 
 
 update_time()
+
 update_date()
 window.mainloop()
+
+
