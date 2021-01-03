@@ -6,8 +6,6 @@ import os
 
 load_dotenv()
 
-api_key = "9ec1418c0976ea68fcf8ef36b99f59f4"
-
 
 window = Tk()
 window.title("")
