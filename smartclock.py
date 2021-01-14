@@ -6,8 +6,6 @@ import os
 import requests, json 
 import calendar 
 
-
-
 load_dotenv()
 
 api_key = os.getenv('API')
@@ -15,6 +13,7 @@ api_key = os.getenv('API')
 url_current = 'http://dataservice.accuweather.com/currentconditions/v1/47173?apikey=' + api_key
 url_forecast = 'http://dataservice.accuweather.com/forecasts/v1/daily/5day/47173?apikey=' + api_key + '&metric=true'
 
+weekDays = ("M ","Tu","W ","Th","F ","Sa","Su")
 
 response_current = requests.get(url_current) 
 response_forecast = requests.get(url_forecast) 
@@ -24,7 +23,31 @@ forecast_json = response_forecast.json()
 
 
 current_temperature = current_json[0]['Temperature']['Metric']['Value']
-# print(current_temperature)
+
+# print(forecast_json['DailyForecasts'])
+
+# date_day1 = forecast_json['DailyForecasts'][0]['Date']
+date_day1 = weekDays[date.today().weekday()]
+temp_low_day1 = str(forecast_json['DailyForecasts'][0]['Temperature']['Minimum']['Value'])
+temp_high_day1 = str(forecast_json['DailyForecasts'][0]['Temperature']['Maximum']['Value'])
+
+date_day2 = weekDays[(date.today()+ timedelta(1)).weekday()]
+temp_low_day2 = str(forecast_json['DailyForecasts'][1]['Temperature']['Minimum']['Value'])
+temp_high_day2 = str(forecast_json['DailyForecasts'][1]['Temperature']['Maximum']['Value'])
+
+date_day3 = weekDays[(date.today()+ timedelta(2)).weekday()]
+temp_low_day3 = str(forecast_json['DailyForecasts'][2]['Temperature']['Minimum']['Value'])
+temp_high_day3 = str(forecast_json['DailyForecasts'][2]['Temperature']['Maximum']['Value'])
+
+date_day4 = weekDays[(date.today()+ timedelta(3)).weekday()]
+temp_low_day4 = str(forecast_json['DailyForecasts'][3]['Temperature']['Minimum']['Value'])
+temp_high_day4 = str(forecast_json['DailyForecasts'][3]['Temperature']['Maximum']['Value'])
+
+date_day5 = weekDays[(date.today()+ timedelta(4)).weekday()]
+temp_low_day5 = str(forecast_json['DailyForecasts'][4]['Temperature']['Minimum']['Value'])
+temp_high_day5 = str(forecast_json['DailyForecasts'][4]['Temperature']['Maximum']['Value'])
+
+
 
 root = Tk()
 root.geometry("480x320")
@@ -52,30 +75,39 @@ def findDay(date):
     born = datetime.datetime.strptime(date, '%d %m %Y').weekday() 
     return (calendar.day_name[born]) 
 
-clock_label = Label(root, bg="green", fg="white", font = ("Times", 30, 'bold'), relief='flat')
+frm_datetime = Frame(root)
+frm_datetime.grid(row=0, column=0, sticky='w')
+
+clock_label = Label(frm_datetime, bg="green", fg="white", font = ("Times", 30, 'bold'), relief='flat')
 clock_label.grid(row=0, column=0, sticky='w')
 
-lbl_date = Label(root, bg="green", fg="white", font = ("Times", 30, 'bold'), relief='flat')
+lbl_date = Label(frm_datetime, bg="green", fg="white", font = ("Times", 30, 'bold'), relief='flat')
 lbl_date.grid(column = 0, row= 1)
+
+
 
 frm_weather = Frame(root)
 frm_weather.grid(row=0, column=2, sticky=NW)
 
-lbl_weather_today = Label(frm_weather, text= 'Today: ' + str(current_temperature), bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
-lbl_weather_today.grid(row=0,column=0, sticky=NW)
 
-# lbl_weather_2nd_day = Label(frm_weather, text= 'Today: ' + str(current_tempurature), bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
-# lbl_weather_2nd_day.grid(row=1,column=0, sticky=NW)
+lbl_weather_current = Label(frm_weather, text= 'NAO: ' + str(current_temperature), bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_weather_current.grid(row=0,column=0, sticky=NW)
 
+lbl_weather_today = Label(frm_weather, text= f'Date: {date_day1} High: {temp_high_day1} Low: {temp_low_day1}', bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_weather_today.grid(row=1,column=0, sticky=NW)
 
-weekDays = ("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")
+lbl_weather_today = Label(frm_weather, text= f'Date: {date_day2} High: {temp_high_day2} Low: {temp_low_day2}', bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_weather_today.grid(row=2,column=0, sticky=NW)
 
-# print(weather_json)
+lbl_weather_today = Label(frm_weather, text= f'Date: {date_day3} High: {temp_high_day3} Low: {temp_low_day3}', bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_weather_today.grid(row=3,column=0, sticky=NW)
 
-# g = Button(frm_weather, text="quit")
-# # g.grid(row=1,column=0, sticky=NW)
-# print(weekDays[today_date.weekday()])
-# print(findDay(date.today()))
+lbl_weather_today = Label(frm_weather, text= f'Date: {date_day4} High: {temp_high_day4} Low: {temp_low_day4}', bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_weather_today.grid(row=4,column=0, sticky=NW)
+
+lbl_weather_today = Label(frm_weather, text= f'Date: {date_day5} High: {temp_high_day5} Low: {temp_low_day5}', bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_weather_today.grid(row=5,column=0, sticky=NW)
+
 
 update_time()
 update_date()
