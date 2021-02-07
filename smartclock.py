@@ -60,7 +60,7 @@ current_weather_icon = ImageTk.PhotoImage(Image.open('icons/' + current_weather_
 
 #Updating time label
 def update_time():
-    current_time = strftime('%H: %M: %S')
+    current_time = strftime('%I:%M:%S %p')
     clock_label.configure(text = current_time)
     clock_label.after(80, update_time)
 #Updating date label
@@ -69,7 +69,11 @@ def update_date():
     lbl_date.configure(text = current_date)
     lbl_date.after(80, update_date)
 
-
+#Updating day label
+def update_day():
+    current_day = today_date.strftime("%A")
+    lbl_day.configure(text = current_day)
+    lbl_day.after(80, update_date)  
 
 frm_datetime = Frame(root)
 frm_datetime.grid(row=0, column=0, sticky='w')
@@ -79,6 +83,9 @@ clock_label.grid(row=0, column=0, sticky='w')
 
 lbl_date = Label(frm_datetime, bg="green", fg="white", font = ("Times", 30, 'bold'), relief='flat')
 lbl_date.grid(column = 0, row= 1)
+
+lbl_day = Label(frm_datetime, bg="green", fg="white", font = ("Times", 30, 'bold'), relief='flat')
+lbl_day.grid(column = 0, row= 2)
 
 frm_weather = Frame(root)
 frm_weather.grid(row=0, column=2, sticky=NW)
@@ -148,8 +155,10 @@ btn_screen_on.grid(row=0, column=0, sticky='w')
 btn_screen_off = Button(frm_screenblank, text="Screen Off", command=lambda: os.system("xset dpms 30 30 30"))
 btn_screen_off.grid(row=0, column=1, sticky='w')
 
+#updating date, time, and day
 update_time()
 update_date()
+update_day()
 
 root.mainloop()
 
