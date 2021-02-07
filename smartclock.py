@@ -69,6 +69,8 @@ def update_date():
     lbl_date.configure(text = current_date)
     lbl_date.after(80, update_date)
 
+
+
 frm_datetime = Frame(root)
 frm_datetime.grid(row=0, column=0, sticky='w')
 
@@ -132,6 +134,19 @@ lbl_weather_day_4_img.grid(row=5,column=1, sticky=NW)
 
 lbl_weather_night_4_img = Label(frm_weather, image = icons[forecast['icon_night4']])
 lbl_weather_night_4_img.grid(row=5,column=2, sticky=NW)
+
+frm_screenblank = Frame(root)
+frm_screenblank.grid(row=1, column=0, sticky='w')
+
+#Button to turn screenblank to 1 h 30 m
+
+btn_screen_on = Button(frm_screenblank, text="Screen On", command=lambda: os.system("xset dpms 7800 7800 7800"))
+btn_screen_on.grid(row=0, column=0, sticky='w')
+
+#Button to turn screenblank to 30 seconds
+
+btn_screen_off = Button(frm_screenblank, text="Screen Off", command=lambda: os.system("xset dpms 30 30 30"))
+btn_screen_off.grid(row=0, column=1, sticky='w')
 
 update_time()
 update_date()
