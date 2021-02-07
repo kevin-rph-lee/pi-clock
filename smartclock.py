@@ -22,6 +22,7 @@ current_json = response_current.json()
 forecast_json = response_forecast.json() 
 current_temperature = current_json[0]['Temperature']['Metric']['Value']
 current_weather = current_json[0]['WeatherText']
+current_weather_icon_num = str(current_json[0]['WeatherIcon'])
 
 #Creating weekday abbreviations
 weekDays = ("M ","Tu","W ","Th","F ","Sa","Su")
@@ -55,8 +56,7 @@ for i in range(1,45):
         icons[str(i)] = ImageTk.PhotoImage(Image.open('icons/' + str(i) + '.png'))
 
 
-current_weather_icon = ImageTk.PhotoImage(Image.open('icons/' + str(current_json[0]['WeatherIcon']) + '.png'))
-
+current_weather_icon = ImageTk.PhotoImage(Image.open('icons/' + current_weather_icon_num + '.png'))
 
 #Updating time label
 def update_time():
