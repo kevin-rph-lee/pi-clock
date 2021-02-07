@@ -21,6 +21,8 @@ response_forecast = requests.get(url_forecast)
 current_json = response_current.json()
 forecast_json = response_forecast.json() 
 current_temperature = current_json[0]['Temperature']['Metric']['Value']
+current_weather = current_json[0]['WeatherText']
+current_weather_icon_num = str(current_json[0]['WeatherIcon'])
 
 #Creating weekday abbreviations
 weekDays = ("M ","Tu","W ","Th","F ","Sa","Su")
@@ -42,7 +44,7 @@ for i in range(0,5):
 
 #Begin create GUI
 root = Tk()
-root.geometry("480x320")
+root.geometry("500x480")
 root.grid_rowconfigure(1, weight=0)
 root.grid_rowconfigure(1, weight=0)
 root.grid_columnconfigure(1, weight=0)
@@ -52,6 +54,9 @@ root.grid_columnconfigure(0, weight=0)
 for i in range(1,45):
     if i not in [9, 10, 27, 28]:
         icons[str(i)] = ImageTk.PhotoImage(Image.open('icons/' + str(i) + '.png'))
+
+
+current_weather_icon = ImageTk.PhotoImage(Image.open('icons/' + current_weather_icon_num + '.png'))
 
 #Updating time label
 def update_time():
@@ -78,6 +83,10 @@ frm_weather.grid(row=0, column=2, sticky=NW)
 
 lbl_weather_current = Label(frm_weather, text= 'NAO: ' + str(current_temperature), bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather_current.grid(row=0,column=0, sticky=NW)
+
+lbl_weather_current_img = Label(frm_weather, image = current_weather_icon)
+lbl_weather_current_img.grid(row=0,column=1, sticky=NW)
+
 
 lbl_weather0 = Label(frm_weather, text= forecast['day_of_week0'] + '= High: ' + forecast['temp_high0'] + ' Low: ' + forecast['temp_low0'], bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather0.grid(row=1,column=0, sticky=NW)
