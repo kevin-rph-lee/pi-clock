@@ -6,6 +6,7 @@ import os
 import requests, json 
 import calendar 
 from PIL import ImageTk, Image
+import pendulum
 
 
 load_dotenv()
@@ -16,16 +17,31 @@ api_key = os.getenv('API')
 #Grabbing current weather and forecasat data
 url_current = 'http://dataservice.accuweather.com/currentconditions/v1/47173?apikey=' + api_key
 url_forecast = 'http://dataservice.accuweather.com/forecasts/v1/daily/5day/47173?apikey=' + api_key + '&metric=true'
+
 response_current = requests.get(url_current) 
 response_forecast = requests.get(url_forecast) 
+response_sunrise_sunset = requests.get('https://api.sunrise-sunset.org/json?lat=49.166592&lng=-123.133568&formatted=0')
+
 current_json = response_current.json()
 forecast_json = response_forecast.json() 
+sunrise_sunset_json = response_sunrise_sunset.json()
+
 current_temperature = current_json[0]['Temperature']['Metric']['Value']
 current_weather = current_json[0]['WeatherText']
 current_weather_icon_num = str(current_json[0]['WeatherIcon'])
 
 #Creating weekday abbreviations
 weekDays = ("M ","Tu","W ","Th","F ","Sa","Su")
+
+#Getting sunrise time
+sunrise = sunrise_sunset_json['results']['sunrise']
+sunrise_utc = pendulum.parse(sunrise, tz='UTC')
+sunrise_pst = sunrise_utc.in_timezone("US/Pacific")
+
+#Getting sunset time
+sunset = sunrise_sunset_json['results']['sunset']
+sunset_utc = pendulum.parse(sunrise, tz='UTC')
+sunset_pst = sunset_utc.in_timezone("US/Pacific")
 
 #Getting today's date
 today_date = date.today()
@@ -96,7 +112,6 @@ lbl_weather_current.grid(row=0,column=0, sticky=NW)
 lbl_weather_current_img = Label(frm_weather, image = current_weather_icon)
 lbl_weather_current_img.grid(row=0,column=1, sticky=NW)
 
-
 lbl_weather0 = Label(frm_weather, text= forecast['day_of_week0'] + '= High: ' + forecast['temp_high0'] + ' Low: ' + forecast['temp_low0'], bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather0.grid(row=1,column=0, sticky=NW)
 
@@ -159,6 +174,8 @@ btn_screen_off.grid(row=0, column=1, sticky='w')
 update_time()
 update_date()
 update_day()
+
+print(sunrise_sunset_json)
 
 root.mainloop()
 
