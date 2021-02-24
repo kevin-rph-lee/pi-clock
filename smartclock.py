@@ -6,6 +6,7 @@ import os
 import requests, json 
 import calendar 
 from PIL import ImageTk, Image
+import pendulum
 
 
 load_dotenv()
@@ -16,16 +17,33 @@ api_key = os.getenv('API')
 #Grabbing current weather and forecasat data
 url_current = 'http://dataservice.accuweather.com/currentconditions/v1/47173?apikey=' + api_key
 url_forecast = 'http://dataservice.accuweather.com/forecasts/v1/daily/5day/47173?apikey=' + api_key + '&metric=true'
+
 response_current = requests.get(url_current) 
 response_forecast = requests.get(url_forecast) 
+response_sunrise_sunset = requests.get('https://api.sunrise-sunset.org/json?lat=49.166592&lng=-123.133568&formatted=0')
+
 current_json = response_current.json()
 forecast_json = response_forecast.json() 
+sunrise_sunset_json = response_sunrise_sunset.json()
+
 current_temperature = current_json[0]['Temperature']['Metric']['Value']
 current_weather = current_json[0]['WeatherText']
 current_weather_icon_num = str(current_json[0]['WeatherIcon'])
 
 #Creating weekday abbreviations
 weekDays = ("M ","Tu","W ","Th","F ","Sa","Su")
+
+#Getting sunrise time from API and formatting it into string
+sunrise = sunrise_sunset_json['results']['sunrise']
+sunrise_utc = pendulum.parse(sunrise, tz='UTC')
+sunrise_pst = sunrise_utc.in_timezone("US/Pacific")
+sunrise_pst_str = sunrise_pst.format('h:mm A')
+
+#Getting sunset time from API and foramtting it into string
+sunset = sunrise_sunset_json['results']['sunset']
+sunset_utc = pendulum.parse(sunset, tz='UTC')
+sunset_pst = sunset_utc.in_timezone("US/Pacific")
+sunset_pst_str = sunset_pst.format('h:mm A')
 
 #Getting today's date
 today_date = date.today()
@@ -96,7 +114,6 @@ lbl_weather_current.grid(row=0,column=0, sticky=NW)
 lbl_weather_current_img = Label(frm_weather, image = current_weather_icon)
 lbl_weather_current_img.grid(row=0,column=1, sticky=NW)
 
-
 lbl_weather0 = Label(frm_weather, text= forecast['day_of_week0'] + '= High: ' + forecast['temp_high0'] + ' Low: ' + forecast['temp_low0'], bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather0.grid(row=1,column=0, sticky=NW)
 
@@ -142,8 +159,19 @@ lbl_weather_day_4_img.grid(row=5,column=1, sticky=NW)
 lbl_weather_night_4_img = Label(frm_weather, image = icons[forecast['icon_night4']])
 lbl_weather_night_4_img.grid(row=5,column=2, sticky=NW)
 
+#Sunrise/Sunset frame
+
+frm_sunrise_sunset = Frame(root)
+frm_sunrise_sunset.grid(row=1, column=0, sticky='w')
+
+lbl_sunrise = Label(frm_sunrise_sunset, text= 'Sunrise: ' + sunrise_pst_str)
+lbl_sunrise.grid(row=0 ,column=0, sticky=NW)
+
+lbl_sunset = Label(frm_sunrise_sunset, text= 'Sunset: ' + sunset_pst_str)
+lbl_sunset.grid(row=1 ,column=0, sticky=NW)
+
 frm_screenblank = Frame(root)
-frm_screenblank.grid(row=1, column=0, sticky='w')
+frm_screenblank.grid(row=2, column=0, sticky='w')
 
 #Button to turn screenblank to 1 h 30 m
 
@@ -159,6 +187,7 @@ btn_screen_off.grid(row=0, column=1, sticky='w')
 update_time()
 update_date()
 update_day()
+
 
 root.mainloop()
 
