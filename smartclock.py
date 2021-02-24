@@ -33,15 +33,17 @@ current_weather_icon_num = str(current_json[0]['WeatherIcon'])
 #Creating weekday abbreviations
 weekDays = ("M ","Tu","W ","Th","F ","Sa","Su")
 
-#Getting sunrise time
+#Getting sunrise time from API and formatting it into string
 sunrise = sunrise_sunset_json['results']['sunrise']
 sunrise_utc = pendulum.parse(sunrise, tz='UTC')
 sunrise_pst = sunrise_utc.in_timezone("US/Pacific")
+sunrise_pst_str = sunrise_pst.format('h:mm A')
 
-#Getting sunset time
+#Getting sunset time from API and foramtting it into string
 sunset = sunrise_sunset_json['results']['sunset']
-sunset_utc = pendulum.parse(sunrise, tz='UTC')
+sunset_utc = pendulum.parse(sunset, tz='UTC')
 sunset_pst = sunset_utc.in_timezone("US/Pacific")
+sunset_pst_str = sunset_pst.format('h:mm A')
 
 #Getting today's date
 today_date = date.today()
@@ -157,8 +159,19 @@ lbl_weather_day_4_img.grid(row=5,column=1, sticky=NW)
 lbl_weather_night_4_img = Label(frm_weather, image = icons[forecast['icon_night4']])
 lbl_weather_night_4_img.grid(row=5,column=2, sticky=NW)
 
+#Sunrise/Sunset frame
+
+frm_sunrise_sunset = Frame(root)
+frm_sunrise_sunset.grid(row=1, column=0, sticky='w')
+
+lbl_sunrise = Label(frm_sunrise_sunset, text= 'Sunrise: ' + sunrise_pst_str)
+lbl_sunrise.grid(row=0 ,column=0, sticky=NW)
+
+lbl_sunset = Label(frm_sunrise_sunset, text= 'Sunset: ' + sunset_pst_str)
+lbl_sunset.grid(row=1 ,column=0, sticky=NW)
+
 frm_screenblank = Frame(root)
-frm_screenblank.grid(row=1, column=0, sticky='w')
+frm_screenblank.grid(row=2, column=0, sticky='w')
 
 #Button to turn screenblank to 1 h 30 m
 
@@ -175,7 +188,6 @@ update_time()
 update_date()
 update_day()
 
-print(sunrise_sunset_json)
 
 root.mainloop()
 
