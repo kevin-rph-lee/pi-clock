@@ -1,4 +1,4 @@
-from time import strftime
+from time import strftime, time, sleep
 from tkinter import *
 from datetime import *
 from dotenv import load_dotenv
@@ -7,234 +7,241 @@ import requests, json
 import calendar 
 from PIL import ImageTk, Image
 import pendulum
-
+import sched, time
 
 load_dotenv()
 
 #Getting API key from ENV file
 api_key = os.getenv('API')
 
-#Grabbing current weather and forecasat data
-url_current = 'http://dataservice.accuweather.com/currentconditions/v1/47173?apikey=' + api_key
-url_forecast = 'http://dataservice.accuweather.com/forecasts/v1/daily/5day/47173?apikey=' + api_key + '&metric=true'
+def get_current():
+    #Getting current weather from API
+    url_current = 'http://dataservice.accuweather.com/currentconditions/v1/47173?apikey=' + api_key
+    response_current = requests.get(url_current) 
+    #checking HTTP response, filling in with dummy data if it's not 200
+    if (response_current.status_code == 200):
+        current_json = response_current.json()
+    else:
+        current_json = [
+                {
+                    "LocalObservationDateTime": "2021-02-24T16:18:00-08:00",
+                    "EpochTime": 1614212280,
+                    "WeatherText": "Cloudy",
+                    "WeatherIcon": 1,
+                    "HasPrecipitation": False,
+                    "PrecipitationType": True,
+                    "IsDayTime": True,
+                    "Temperature": {
+                    "Metric": {
+                        "Value": 0.0,
+                        "Unit": "C",
+                        "UnitType": 17
+                    },
+                    "Imperial": {
+                        "Value": 43,
+                        "Unit": "F",
+                        "UnitType": 18
+                    }
+                    },
+                    "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/current-weather/47173?lang=en-us",
+                    "Link": "http://www.accuweather.com/en/ca/richmond/v6y/current-weather/47173?lang=en-us"
+                }
+            ]
+    return current_json
 
+def get_forecast():
+    #Getting weather forecast from API
 
+    url_forecast = 'http://dataservice.accuweather.com/forecasts/v1/daily/5day/47173?apikey=' + api_key + '&metric=true'
+    response_forecast = requests.get(url_forecast)
 
-response_current = requests.get(url_current) 
-response_forecast = requests.get(url_forecast)
-
-#checking HTTP response, filling in with dummy data if it's not 200
-if response_current == 200 or response_forecast == 200:
-    print('good')
-    current_json = response_current.json()
-    forecast_json = response_forecast.json()    
-
-else:
-    print('Bad')
-    current_json = [
-            {
-                "LocalObservationDateTime": "2021-02-24T16:18:00-08:00",
-                "EpochTime": 1614212280,
-                "WeatherText": "Cloudy",
-                "WeatherIcon": 1,
-                "HasPrecipitation": False,
-                "PrecipitationType": True,
-                "IsDayTime": True,
+    #checking HTTP response, filling in with dummy data if it's not 200
+    if (response_forecast.status_code == 200):        
+        forecast_json = response_forecast.json()
+    else:
+        forecast_json = {
+            "Headline": {
+                "EffectiveDate": "2021-02-24T19:00:00-08:00",
+                "EffectiveEpochDate": 1614222000,
+                "Severity": 5,
+                "Text": "Rain tonight",
+                "Category": "rain",
+                "EndDate": "2021-02-25T07:00:00-08:00",
+                "EndEpochDate": 1614265200,
+                "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/extended-weather-forecast/47173?unit=c&lang=en-us",
+                "Link": "http://www.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?unit=c&lang=en-us"
+            },
+            "DailyForecasts": [
+                {
+                "Date": "2021-02-24T07:00:00-08:00",
+                "EpochDate": 1614178800,
                 "Temperature": {
-                "Metric": {
+                    "Minimum": {
                     "Value": 0.0,
                     "Unit": "C",
                     "UnitType": 17
+                    },
+                    "Maximum": {
+                    "Value": 0.0,
+                    "Unit": "C",
+                    "UnitType": 17
+                    }
                 },
-                "Imperial": {
-                    "Value": 43,
-                    "Unit": "F",
-                    "UnitType": 18
+                "Day": {
+                    "Icon": 1,
+                    "IconPhrase": "Mostly cloudy",
+                    "HasPrecipitation": False
+                },
+                "Night": {
+                    "Icon": 1,
+                    "IconPhrase": "Rain",
+                    "HasPrecipitation": True,
+                    "PrecipitationType": "Rain",
+                    "PrecipitationIntensity": "Light"
+                },
+                "Sources": [
+                    "AccuWeather"
+                ],
+                "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=1&unit=c&lang=en-us",
+                "Link": "http://www.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=1&unit=c&lang=en-us"
+                },
+                {
+                "Date": "2021-02-25T07:00:00-08:00",
+                "EpochDate": 1614265200,
+                "Temperature": {
+                    "Minimum": {
+                    "Value": 0.0,
+                    "Unit": "C",
+                    "UnitType": 17
+                    },
+                    "Maximum": {
+                    "Value": 0.0,
+                    "Unit": "C",
+                    "UnitType": 17
+                    }
+                },
+                "Day": {
+                    "Icon": 1,
+                    "IconPhrase": "Intermittent clouds",
+                    "HasPrecipitation": False
+                },
+                "Night": {
+                    "Icon": 1,
+                    "IconPhrase": "Partly cloudy",
+                    "HasPrecipitation": False
+                },
+                "Sources": [
+                    "AccuWeather"
+                ],
+                "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=2&unit=c&lang=en-us",
+                "Link": "http://www.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=2&unit=c&lang=en-us"
+                },
+                {
+                "Date": "2021-02-26T07:00:00-08:00",
+                "EpochDate": 1614351600,
+                "Temperature": {
+                    "Minimum": {
+                    "Value": 0.0,
+                    "Unit": "C",
+                    "UnitType": 17
+                    },
+                    "Maximum": {
+                    "Value": 0.0,
+                    "Unit": "C",
+                    "UnitType": 17
+                    }
+                },
+                "Day": {
+                    "Icon": 1,
+                    "IconPhrase": "Mostly sunny",
+                    "HasPrecipitation": False
+                },
+                "Night": {
+                    "Icon": 1,
+                    "IconPhrase": "Mostly clear",
+                    "HasPrecipitation": False
+                },
+                "Sources": [
+                    "AccuWeather"
+                ],
+                "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=3&unit=c&lang=en-us",
+                "Link": "http://www.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=3&unit=c&lang=en-us"
+                },
+                {
+                "Date": "2021-02-27T07:00:00-08:00",
+                "EpochDate": 1614438000,
+                "Temperature": {
+                    "Minimum": {
+                    "Value": 0.0,
+                    "Unit": "C",
+                    "UnitType": 17
+                    },
+                    "Maximum": {
+                    "Value": 0.0,
+                    "Unit": "C",
+                    "UnitType": 17
+                    }
+                },
+                "Day": {
+                    "Icon": 1,
+                    "IconPhrase": "Mostly cloudy",
+                    "HasPrecipitation": False
+                },
+                "Night": {
+                    "Icon": 1,
+                    "IconPhrase": "Showers",
+                    "HasPrecipitation": True,
+                    "PrecipitationType": "Rain",
+                    "PrecipitationIntensity": "Light"
+                },
+                "Sources": [
+                    "AccuWeather"
+                ],
+                "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=4&unit=c&lang=en-us",
+                "Link": "http://www.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=4&unit=c&lang=en-us"
+                },
+                {
+                "Date": "2021-02-28T07:00:00-08:00",
+                "EpochDate": 1614524400,
+                "Temperature": {
+                    "Minimum": {
+                    "Value": 0.0,
+                    "Unit": "C",
+                    "UnitType": 17
+                    },
+                    "Maximum": {
+                    "Value": 0.0,
+                    "Unit": "C",
+                    "UnitType": 17
+                    }
+                },
+                "Day": {
+                    "Icon": 1,
+                    "IconPhrase": "Rain",
+                    "HasPrecipitation": True,
+                    "PrecipitationType": "Rain",
+                    "PrecipitationIntensity": "Light"
+                },
+                "Night": {
+                    "Icon": 1,
+                    "IconPhrase": "Rain",
+                    "HasPrecipitation": True,
+                    "PrecipitationType": "Rain",
+                    "PrecipitationIntensity": "Light"
+                },
+                "Sources": [
+                    "AccuWeather"
+                ],
+                "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=5&unit=c&lang=en-us",
+                "Link": "http://www.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=5&unit=c&lang=en-us"
                 }
-                },
-                "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/current-weather/47173?lang=en-us",
-                "Link": "http://www.accuweather.com/en/ca/richmond/v6y/current-weather/47173?lang=en-us"
+            ]
             }
-        ]
-    forecast_json = {
-        "Headline": {
-            "EffectiveDate": "2021-02-24T19:00:00-08:00",
-            "EffectiveEpochDate": 1614222000,
-            "Severity": 5,
-            "Text": "Rain tonight",
-            "Category": "rain",
-            "EndDate": "2021-02-25T07:00:00-08:00",
-            "EndEpochDate": 1614265200,
-            "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/extended-weather-forecast/47173?unit=c&lang=en-us",
-            "Link": "http://www.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?unit=c&lang=en-us"
-        },
-        "DailyForecasts": [
-            {
-            "Date": "2021-02-24T07:00:00-08:00",
-            "EpochDate": 1614178800,
-            "Temperature": {
-                "Minimum": {
-                "Value": 0.0,
-                "Unit": "C",
-                "UnitType": 17
-                },
-                "Maximum": {
-                "Value": 0.0,
-                "Unit": "C",
-                "UnitType": 17
-                }
-            },
-            "Day": {
-                "Icon": 1,
-                "IconPhrase": "Mostly cloudy",
-                "HasPrecipitation": False
-            },
-            "Night": {
-                "Icon": 1,
-                "IconPhrase": "Rain",
-                "HasPrecipitation": True,
-                "PrecipitationType": "Rain",
-                "PrecipitationIntensity": "Light"
-            },
-            "Sources": [
-                "AccuWeather"
-            ],
-            "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=1&unit=c&lang=en-us",
-            "Link": "http://www.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=1&unit=c&lang=en-us"
-            },
-            {
-            "Date": "2021-02-25T07:00:00-08:00",
-            "EpochDate": 1614265200,
-            "Temperature": {
-                "Minimum": {
-                "Value": 0.0,
-                "Unit": "C",
-                "UnitType": 17
-                },
-                "Maximum": {
-                "Value": 0.0,
-                "Unit": "C",
-                "UnitType": 17
-                }
-            },
-            "Day": {
-                "Icon": 1,
-                "IconPhrase": "Intermittent clouds",
-                "HasPrecipitation": False
-            },
-            "Night": {
-                "Icon": 1,
-                "IconPhrase": "Partly cloudy",
-                "HasPrecipitation": False
-            },
-            "Sources": [
-                "AccuWeather"
-            ],
-            "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=2&unit=c&lang=en-us",
-            "Link": "http://www.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=2&unit=c&lang=en-us"
-            },
-            {
-            "Date": "2021-02-26T07:00:00-08:00",
-            "EpochDate": 1614351600,
-            "Temperature": {
-                "Minimum": {
-                "Value": 0.0,
-                "Unit": "C",
-                "UnitType": 17
-                },
-                "Maximum": {
-                "Value": 0.0,
-                "Unit": "C",
-                "UnitType": 17
-                }
-            },
-            "Day": {
-                "Icon": 1,
-                "IconPhrase": "Mostly sunny",
-                "HasPrecipitation": False
-            },
-            "Night": {
-                "Icon": 1,
-                "IconPhrase": "Mostly clear",
-                "HasPrecipitation": False
-            },
-            "Sources": [
-                "AccuWeather"
-            ],
-            "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=3&unit=c&lang=en-us",
-            "Link": "http://www.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=3&unit=c&lang=en-us"
-            },
-            {
-            "Date": "2021-02-27T07:00:00-08:00",
-            "EpochDate": 1614438000,
-            "Temperature": {
-                "Minimum": {
-                "Value": 0.0,
-                "Unit": "C",
-                "UnitType": 17
-                },
-                "Maximum": {
-                "Value": 0.0,
-                "Unit": "C",
-                "UnitType": 17
-                }
-            },
-            "Day": {
-                "Icon": 1,
-                "IconPhrase": "Mostly cloudy",
-                "HasPrecipitation": False
-            },
-            "Night": {
-                "Icon": 1,
-                "IconPhrase": "Showers",
-                "HasPrecipitation": True,
-                "PrecipitationType": "Rain",
-                "PrecipitationIntensity": "Light"
-            },
-            "Sources": [
-                "AccuWeather"
-            ],
-            "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=4&unit=c&lang=en-us",
-            "Link": "http://www.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=4&unit=c&lang=en-us"
-            },
-            {
-            "Date": "2021-02-28T07:00:00-08:00",
-            "EpochDate": 1614524400,
-            "Temperature": {
-                "Minimum": {
-                "Value": 0.0,
-                "Unit": "C",
-                "UnitType": 17
-                },
-                "Maximum": {
-                "Value": 0.0,
-                "Unit": "C",
-                "UnitType": 17
-                }
-            },
-            "Day": {
-                "Icon": 1,
-                "IconPhrase": "Rain",
-                "HasPrecipitation": True,
-                "PrecipitationType": "Rain",
-                "PrecipitationIntensity": "Light"
-            },
-            "Night": {
-                "Icon": 1,
-                "IconPhrase": "Rain",
-                "HasPrecipitation": True,
-                "PrecipitationType": "Rain",
-                "PrecipitationIntensity": "Light"
-            },
-            "Sources": [
-                "AccuWeather"
-            ],
-            "MobileLink": "http://m.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=5&unit=c&lang=en-us",
-            "Link": "http://www.accuweather.com/en/ca/richmond/v6y/daily-weather-forecast/47173?day=5&unit=c&lang=en-us"
-            }
-         ]
-        }
+    return forecast_json
 
+#Calling api
+forecast_json = get_forecast()
+current_json = get_current()
 
 response_sunrise_sunset = requests.get('https://api.sunrise-sunset.org/json?lat=49.166592&lng=-123.133568&formatted=0')
 
@@ -307,6 +314,7 @@ def update_day():
     lbl_day.configure(text = current_day)
     lbl_day.after(80, update_date)  
 
+
 frm_datetime = Frame(root)
 frm_datetime.grid(row=0, column=0, sticky='w')
 
@@ -373,6 +381,7 @@ lbl_weather_day_4_img.grid(row=5,column=1, sticky=NW)
 lbl_weather_night_4_img = Label(frm_weather, image = icons[forecast['icon_night4']])
 lbl_weather_night_4_img.grid(row=5,column=2, sticky=NW)
 
+
 #Sunrise/Sunset frame
 
 frm_sunrise_sunset = Frame(root)
@@ -386,6 +395,18 @@ lbl_sunset.grid(row=1 ,column=0, sticky=NW)
 
 frm_screenblank = Frame(root)
 frm_screenblank.grid(row=2, column=0, sticky='w')
+
+
+
+
+
+
+
+
+
+
+
+
 
 #Button to turn screenblank to 1 h 30 m
 
