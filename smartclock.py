@@ -256,18 +256,9 @@ def update_time_date():
         time.sleep(0.1)
 
 
-
-#Calling api
-forecast_json = get_forecast()
-current_json = get_current()
-
 response_sunrise_sunset = requests.get('https://api.sunrise-sunset.org/json?lat=49.166592&lng=-123.133568&formatted=0')
 
 sunrise_sunset_json = response_sunrise_sunset.json()
-
-current_temperature = current_json[0]['Temperature']['Metric']['Value']
-current_weather = current_json[0]['WeatherText']
-current_weather_icon_num = str(current_json[0]['WeatherIcon'])
 
 #Creating weekday abbreviations
 weekDays = ("M ","Tu","W ","Th","F ","Sa","Su")
@@ -287,17 +278,6 @@ sunset_pst_str = sunset_pst.format('h:mm A')
 #Getting today's date
 today_date = date.today()
 
-#Creating empty dictionaries for icons and forecast
-icons = {}
-forecast = {}
-
-#creating forecast within forecast dictionary for the 5 day forecast
-for i in range(0,5):
-    forecast['day_of_week' + str(i)] = weekDays[(date.today()+ timedelta(i)).weekday()]
-    forecast['temp_low' + str(i)] = str(forecast_json['DailyForecasts'][i]['Temperature']['Minimum']['Value'])
-    forecast['temp_high' + str(i)] = str(forecast_json['DailyForecasts'][i]['Temperature']['Maximum']['Value'])
-    forecast['icon_day' + str(i)] = str(forecast_json['DailyForecasts'][i]['Day']['Icon'])
-    forecast['icon_night' + str(i)] = str(forecast_json['DailyForecasts'][i]['Night']['Icon'])
 
 #Begin create GUI
 root = Tk()
@@ -307,21 +287,39 @@ root.grid_rowconfigure(1, weight=0)
 root.grid_columnconfigure(1, weight=0)
 root.grid_columnconfigure(0, weight=0)
 
-#Populating dictionary for icon files
-for i in range(1,45):
-    if i not in [9, 10, 27, 28]:
-        icons[str(i)] = ImageTk.PhotoImage(Image.open('icons/' + str(i) + '.png'))
 
-
-current_weather_icon = ImageTk.PhotoImage(Image.open('icons/' + current_weather_icon_num + '.png'))
 
 
 def update_api():
+    #Updatest the API for current weather, forecast, and sunrise/sunset
+
+    #Creating empty dictionaries for icons and forecast
+    icons = {}
+    forecast = {}
+
+
+
+    #Populating dictionary for icon files
+    for i in range(1,45):
+        if i not in [9, 10, 27, 28]:
+            icons[str(i)] = ImageTk.PhotoImage(Image.open('icons/' + str(i) + '.png'))
+
+
     while True:
-        time.sleep(10) 
-        print('update api!' + strftime('%I:%M:%S %p'))
+
+        print('update api!' + strftime('%I:%M:%S %p') + '--------')
         forecast_json = get_forecast()
         current_json = get_current()
+
+
+        #creating forecast within forecast dictionary for the 5 day forecast
+        for i in range(0,5):
+            forecast['day_of_week' + str(i)] = weekDays[(date.today()+ timedelta(i)).weekday()]
+            forecast['temp_low' + str(i)] = str(forecast_json['DailyForecasts'][i]['Temperature']['Minimum']['Value'])
+            forecast['temp_high' + str(i)] = str(forecast_json['DailyForecasts'][i]['Temperature']['Maximum']['Value'])
+            forecast['icon_day' + str(i)] = str(forecast_json['DailyForecasts'][i]['Day']['Icon'])
+            forecast['icon_night' + str(i)] = str(forecast_json['DailyForecasts'][i]['Night']['Icon'])
+
 
         current_temperature = current_json[0]['Temperature']['Metric']['Value']
         print('New Current Tepurature: ' + str(current_temperature))
@@ -363,10 +361,10 @@ def update_api():
         lbl_weather4.configure(text= forecast['day_of_week4'] + '= High: ' + forecast['temp_high4'] + ' Low: ' + forecast['temp_low4'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
         lbl_weather_day_4_img.configure(image = icons[forecast['icon_day4']])
         lbl_weather_night_4_img.configure(image =  icons[forecast['icon_night4']])
+        
+        #sleep for an hour
+        time.sleep(3600) 
 
-
-
-           
 
 
 frm_datetime = Frame(root)
@@ -381,58 +379,64 @@ lbl_date.grid(column = 0, row= 1)
 lbl_day = Label(frm_datetime, bg="green", fg="white", font = ("Times", 30, 'bold'), relief='flat')
 lbl_day.grid(column = 0, row= 2)
 
+#Weather Frame
+
+#Current Weather
+
 frm_weather = Frame(root)
 frm_weather.grid(row=0, column=2, sticky=NW)
 
-lbl_weather_current = Label(frm_weather, text= 'NAO: ' + str(current_temperature), bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_weather_current = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather_current.grid(row=0,column=0, sticky=NW)
 
-lbl_weather_current_img = Label(frm_weather, image = current_weather_icon)
+lbl_weather_current_img = Label(frm_weather)
 lbl_weather_current_img.grid(row=0,column=1, sticky=NW)
 
-lbl_weather0 = Label(frm_weather, text= forecast['day_of_week0'] + '= High: ' + forecast['temp_high0'] + ' Low: ' + forecast['temp_low0'], bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+#Weather Forecast
+
+lbl_weather0 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather0.grid(row=1,column=0, sticky=NW)
 
-lbl_weather_day_0_img = Label(frm_weather, image = icons[forecast['icon_day0']])
+lbl_weather_day_0_img = Label(frm_weather)
 lbl_weather_day_0_img.grid(row=1,column=1, sticky=NW)
 
-lbl_weather_night_0_img = Label(frm_weather, image = icons[forecast['icon_night0']])
+lbl_weather_night_0_img = Label(frm_weather)
 lbl_weather_night_0_img.grid(row=1,column=2, sticky=NW)
 
-lbl_weather1 = Label(frm_weather, text= forecast['day_of_week1'] + '= High: ' + forecast['temp_high1'] + ' Low: ' + forecast['temp_low1'], bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_weather1 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather1.grid(row=2,column=0, sticky=NW)
 
-lbl_weather_day_1_img = Label(frm_weather, image = icons[forecast['icon_day1']])
+lbl_weather_day_1_img = Label(frm_weather)
 lbl_weather_day_1_img.grid(row=2,column=1, sticky=NW)
 
-lbl_weather_night_1_img = Label(frm_weather, image = icons[forecast['icon_night1']])
+lbl_weather_night_1_img = Label(frm_weather)
 lbl_weather_night_1_img.grid(row=2,column=2, sticky=NW)
 
-lbl_weather2 = Label(frm_weather, text= forecast['day_of_week2'] + '= High: ' + forecast['temp_high2'] + ' Low: ' + forecast['temp_low2'], bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_weather2 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather2.grid(row=3,column=0, sticky=NW)
 
-lbl_weather_day_2_img = Label(frm_weather, image = icons[forecast['icon_day2']])
+lbl_weather_day_2_img = Label(frm_weather)
 lbl_weather_day_2_img.grid(row=3,column=1, sticky=NW)
 
-lbl_weather_night_2_img = Label(frm_weather, image = icons[forecast['icon_night2']])
+lbl_weather_night_2_img = Label(frm_weather)
 lbl_weather_night_2_img.grid(row=3,column=2, sticky=NW)
 
-lbl_weather3 = Label(frm_weather, text= forecast['day_of_week3'] + '= High: ' + forecast['temp_high3'] + ' Low: ' + forecast['temp_low3'], bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_weather3 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather3.grid(row=4,column=0, sticky=NW)
 
-lbl_weather_day_3_img = Label(frm_weather, image = icons[forecast['icon_day3']])
+lbl_weather_day_3_img = Label(frm_weather)
 lbl_weather_day_3_img.grid(row=4,column=1, sticky=NW)
 
-lbl_weather_night_3_img = Label(frm_weather, image = icons[forecast['icon_night3']])
+lbl_weather_night_3_img = Label(frm_weather)
 lbl_weather_night_3_img.grid(row=4,column=2, sticky=NW)
 
-lbl_weather4 = Label(frm_weather, text= forecast['day_of_week4'] + '= High: ' + forecast['temp_high4'] + ' Low: ' + forecast['temp_low4'], bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_weather4 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather4.grid(row=5,column=0, sticky=NW)
 
-lbl_weather_day_4_img = Label(frm_weather, image = icons[forecast['icon_day4']])
+lbl_weather_day_4_img = Label(frm_weather)
 lbl_weather_day_4_img.grid(row=5,column=1, sticky=NW)
 
-lbl_weather_night_4_img = Label(frm_weather, image = icons[forecast['icon_night4']])
+lbl_weather_night_4_img = Label(frm_weather)
 lbl_weather_night_4_img.grid(row=5,column=2, sticky=NW)
 
 
