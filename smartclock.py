@@ -240,6 +240,23 @@ def get_forecast():
             }
     return forecast_json
 
+def update_time_date():
+    #Updating time/date/day labels in an infinite while loop
+    while True:
+        #update time
+        current_time = strftime('%I:%M:%S %p')
+        clock_label.configure(text = current_time)
+        #update date
+        current_date = today_date.strftime("%d-%b-%Y")
+        lbl_date.configure(text = current_date)
+        #update day
+        current_day = today_date.strftime("%A")
+        lbl_day.configure(text = current_day)
+
+        time.sleep(0.1)
+
+
+
 #Calling api
 forecast_json = get_forecast()
 current_json = get_current()
@@ -299,20 +316,57 @@ for i in range(1,45):
 current_weather_icon = ImageTk.PhotoImage(Image.open('icons/' + current_weather_icon_num + '.png'))
 
 
-def update_time_date():
-    #Updating time/date/day labels in an infinite while loop
+def update_api():
     while True:
-        #update time
-        current_time = strftime('%I:%M:%S %p')
-        clock_label.configure(text = current_time)
-        #update date
-        current_date = today_date.strftime("%d-%b-%Y")
-        lbl_date.configure(text = current_date)
-        #update day
-        current_day = today_date.strftime("%A")
-        lbl_day.configure(text = current_day)
+        time.sleep(10) 
+        print('update api!' + strftime('%I:%M:%S %p'))
+        forecast_json = get_forecast()
+        current_json = get_current()
 
-        time.sleep(0.1)
+        current_temperature = current_json[0]['Temperature']['Metric']['Value']
+        print('New Current Tepurature: ' + str(current_temperature))
+
+        current_weather_icon_num = str(current_json[0]['WeatherIcon'])
+        current_weather_icon = ImageTk.PhotoImage(Image.open('icons/' + current_weather_icon_num + '.png'))
+        print('Current weather icon! : ' + str(current_weather_icon_num))
+
+        for i in range(0,5):
+            forecast['day_of_week' + str(i)] = weekDays[(date.today()+ timedelta(i)).weekday()]
+            forecast['temp_low' + str(i)] = str(forecast_json['DailyForecasts'][i]['Temperature']['Minimum']['Value'])
+            forecast['temp_high' + str(i)] = str(forecast_json['DailyForecasts'][i]['Temperature']['Maximum']['Value'])
+            forecast['icon_day' + str(i)] = str(forecast_json['DailyForecasts'][i]['Day']['Icon'])
+            forecast['icon_night' + str(i)] = str(forecast_json['DailyForecasts'][i]['Night']['Icon'])
+
+        for x in forecast:
+            print('Day ' + str(x) + ' ' + forecast['temp_high0'] + ' ' + forecast['temp_low0'])
+
+        #update current wather
+        lbl_weather_current.configure(text =  'NAO: ' + str(current_temperature))
+        lbl_weather_current_img.configure(image = current_weather_icon)
+
+        lbl_weather0.configure(text= forecast['day_of_week0'] + '= High: ' + forecast['temp_high0'] + ' Low: ' + forecast['temp_low0'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_weather_day_0_img.configure(image = icons[forecast['icon_day0']])
+        lbl_weather_night_0_img.configure(image =  icons[forecast['icon_night0']])
+
+        lbl_weather1.configure(text= forecast['day_of_week1'] + '= High: ' + forecast['temp_high1'] + ' Low: ' + forecast['temp_low1'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_weather_day_1_img.configure(image = icons[forecast['icon_day1']])
+        lbl_weather_night_1_img.configure(image =  icons[forecast['icon_night1']])
+
+        lbl_weather2.configure(text= forecast['day_of_week2'] + '= High: ' + forecast['temp_high2'] + ' Low: ' + forecast['temp_low2'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_weather_day_2_img.configure(image = icons[forecast['icon_day2']])
+        lbl_weather_night_2_img.configure(image =  icons[forecast['icon_night2']])
+
+        lbl_weather3.configure(text= forecast['day_of_week3'] + '= High: ' + forecast['temp_high3'] + ' Low: ' + forecast['temp_low3'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_weather_day_3_img.configure(image = icons[forecast['icon_day3']])
+        lbl_weather_night_3_img.configure(image =  icons[forecast['icon_night3']])
+
+        lbl_weather4.configure(text= forecast['day_of_week4'] + '= High: ' + forecast['temp_high4'] + ' Low: ' + forecast['temp_low4'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_weather_day_4_img.configure(image = icons[forecast['icon_day4']])
+        lbl_weather_night_4_img.configure(image =  icons[forecast['icon_night4']])
+
+
+
+           
 
 
 frm_datetime = Frame(root)
@@ -366,11 +420,11 @@ lbl_weather_night_2_img.grid(row=3,column=2, sticky=NW)
 lbl_weather3 = Label(frm_weather, text= forecast['day_of_week3'] + '= High: ' + forecast['temp_high3'] + ' Low: ' + forecast['temp_low3'], bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather3.grid(row=4,column=0, sticky=NW)
 
-lbl_weather_day_1_img = Label(frm_weather, image = icons[forecast['icon_day3']])
-lbl_weather_day_1_img.grid(row=4,column=1, sticky=NW)
+lbl_weather_day_3_img = Label(frm_weather, image = icons[forecast['icon_day3']])
+lbl_weather_day_3_img.grid(row=4,column=1, sticky=NW)
 
-lbl_weather_night_1_img = Label(frm_weather, image = icons[forecast['icon_night3']])
-lbl_weather_night_1_img.grid(row=4,column=2, sticky=NW)
+lbl_weather_night_3_img = Label(frm_weather, image = icons[forecast['icon_night3']])
+lbl_weather_night_3_img.grid(row=4,column=2, sticky=NW)
 
 lbl_weather4 = Label(frm_weather, text= forecast['day_of_week4'] + '= High: ' + forecast['temp_high4'] + ' Low: ' + forecast['temp_low4'], bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather4.grid(row=5,column=0, sticky=NW)
@@ -410,6 +464,10 @@ btn_screen_off.grid(row=0, column=1, sticky='w')
 #running thread to update time/date/day of GUI
 update_time_date_thread = Thread(target= update_time_date, daemon = True)
 update_time_date_thread.start()
+
+#
+update_api_thread = Thread(target= update_api, daemon = True)
+update_api_thread.start()
 
 
 root.mainloop()
