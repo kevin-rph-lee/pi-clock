@@ -11,12 +11,14 @@ import sched, time
 from threading import Thread
 
 load_dotenv()
-
 #Getting API key from ENV file
 api_key = os.getenv('API')
+#Creating weekday abbreviations
+weekDays = ("M ","Tu","W ","Th","F ","Sa","Su")
 
 def get_current():
     #Getting current weather from API
+
     url_current = 'http://dataservice.accuweather.com/currentconditions/v1/47173?apikey=' + api_key
     response_current = requests.get(url_current) 
     #checking HTTP response, filling in with dummy data if it's not 200
@@ -242,53 +244,24 @@ def get_forecast():
 
 def update_time_date():
     #Updating time/date/day labels in an infinite while loop
+
+    #infinite while loop running every 0.1 seconds to update the clock/date/day
     while True:
+        
+        #Getting today's date
+        today_date = date.today()
+
         #update time
         current_time = strftime('%I:%M:%S %p')
         clock_label.configure(text = current_time)
         #update date
-        current_date = today_date.strftime("%d-%b-%Y")
+        current_date = today_date.strftime("%d %b %Y")
         lbl_date.configure(text = current_date)
         #update day
         current_day = today_date.strftime("%A")
         lbl_day.configure(text = current_day)
 
         time.sleep(0.1)
-
-
-response_sunrise_sunset = requests.get('https://api.sunrise-sunset.org/json?lat=49.166592&lng=-123.133568&formatted=0')
-
-sunrise_sunset_json = response_sunrise_sunset.json()
-
-#Creating weekday abbreviations
-weekDays = ("M ","Tu","W ","Th","F ","Sa","Su")
-
-#Getting sunrise time from API and formatting it into string
-sunrise = sunrise_sunset_json['results']['sunrise']
-sunrise_utc = pendulum.parse(sunrise, tz='UTC')
-sunrise_pst = sunrise_utc.in_timezone("US/Pacific")
-sunrise_pst_str = sunrise_pst.format('h:mm A')
-
-#Getting sunset time from API and foramtting it into string
-sunset = sunrise_sunset_json['results']['sunset']
-sunset_utc = pendulum.parse(sunset, tz='UTC')
-sunset_pst = sunset_utc.in_timezone("US/Pacific")
-sunset_pst_str = sunset_pst.format('h:mm A')
-
-#Getting today's date
-today_date = date.today()
-
-
-#Begin create GUI
-root = Tk()
-root.geometry("500x480")
-root.grid_rowconfigure(1, weight=0)
-root.grid_rowconfigure(1, weight=0)
-root.grid_columnconfigure(1, weight=0)
-root.grid_columnconfigure(0, weight=0)
-
-
-
 
 def update_api():
     #Updatest the API for current weather, forecast, and sunrise/sunset
@@ -297,20 +270,37 @@ def update_api():
     icons = {}
     forecast = {}
 
-
-
     #Populating dictionary for icon files
     for i in range(1,45):
         if i not in [9, 10, 27, 28]:
             icons[str(i)] = ImageTk.PhotoImage(Image.open('icons/' + str(i) + '.png'))
 
-
+    #Infinite while loop that runs once per hour to update the API data
     while True:
 
-        print('update api!' + strftime('%I:%M:%S %p') + '--------')
+        print('update API = ' + strftime('%I:%M:%S %p') + '--------')
+
+        #Getting JSON data from accuweather API
         forecast_json = get_forecast()
         current_json = get_current()
 
+        #Getting
+        response_sunrise_sunset = requests.get('https://api.sunrise-sunset.org/json?lat=49.166592&lng=-123.133568&formatted=0')
+        sunrise_sunset_json = response_sunrise_sunset.json()    
+
+        #Getting sunrise time from API and formatting it into string
+        sunrise = sunrise_sunset_json['results']['sunrise']
+        sunrise_utc = pendulum.parse(sunrise, tz='UTC')
+        sunrise_pst = sunrise_utc.in_timezone("US/Pacific")
+        sunrise_pst_str = sunrise_pst.format('h:mm A')
+
+        #Getting sunset time from API and foramtting it into string
+        sunset = sunrise_sunset_json['results']['sunset']
+        sunset_utc = pendulum.parse(sunset, tz='UTC')
+        sunset_pst = sunset_utc.in_timezone("US/Pacific")
+        sunset_pst_str = sunset_pst.format('h:mm A')
+
+        print('Sunrise/Sunset: ' + sunrise_pst_str + ' ' + sunset_pst_str)
 
         #creating forecast within forecast dictionary for the 5 day forecast
         for i in range(0,5):
@@ -319,7 +309,6 @@ def update_api():
             forecast['temp_high' + str(i)] = str(forecast_json['DailyForecasts'][i]['Temperature']['Maximum']['Value'])
             forecast['icon_day' + str(i)] = str(forecast_json['DailyForecasts'][i]['Day']['Icon'])
             forecast['icon_night' + str(i)] = str(forecast_json['DailyForecasts'][i]['Night']['Icon'])
-
 
         current_temperature = current_json[0]['Temperature']['Metric']['Value']
         print('New Current Tepurature: ' + str(current_temperature))
@@ -362,11 +351,22 @@ def update_api():
         lbl_weather_day_4_img.configure(image = icons[forecast['icon_day4']])
         lbl_weather_night_4_img.configure(image =  icons[forecast['icon_night4']])
         
+        #update sunrise/sunset 
+        lbl_sunrise.configure(text= 'Sunrise: ' + sunrise_pst_str)
+        lbl_sunset.configure(text= 'Sunset: ' + sunset_pst_str)
+
         #sleep for an hour
         time.sleep(3600) 
 
+#Begin create GUI
+root = Tk()
+root.geometry("500x480")
+root.grid_rowconfigure(1, weight=0)
+root.grid_rowconfigure(1, weight=0)
+root.grid_columnconfigure(1, weight=0)
+root.grid_columnconfigure(0, weight=0)
 
-
+#Time/Date/Day Frame
 frm_datetime = Frame(root)
 frm_datetime.grid(row=0, column=0, sticky='w')
 
@@ -439,21 +439,21 @@ lbl_weather_day_4_img.grid(row=5,column=1, sticky=NW)
 lbl_weather_night_4_img = Label(frm_weather)
 lbl_weather_night_4_img.grid(row=5,column=2, sticky=NW)
 
-
 #Sunrise/Sunset frame
 
 frm_sunrise_sunset = Frame(root)
 frm_sunrise_sunset.grid(row=1, column=0, sticky='w')
 
-lbl_sunrise = Label(frm_sunrise_sunset, text= 'Sunrise: ' + sunrise_pst_str)
+lbl_sunrise = Label(frm_sunrise_sunset)
 lbl_sunrise.grid(row=0 ,column=0, sticky=NW)
 
-lbl_sunset = Label(frm_sunrise_sunset, text= 'Sunset: ' + sunset_pst_str)
+lbl_sunset = Label(frm_sunrise_sunset)
 lbl_sunset.grid(row=1 ,column=0, sticky=NW)
+
+#Screnblank frame
 
 frm_screenblank = Frame(root)
 frm_screenblank.grid(row=2, column=0, sticky='w')
-
 
 #Button to turn screenblank to 1 h 30 m
 
@@ -469,9 +469,8 @@ btn_screen_off.grid(row=0, column=1, sticky='w')
 update_time_date_thread = Thread(target= update_time_date, daemon = True)
 update_time_date_thread.start()
 
-#
+#running thread to update API data (current weather, forecast, sunrise/sunset)
 update_api_thread = Thread(target= update_api, daemon = True)
 update_api_thread.start()
-
 
 root.mainloop()
