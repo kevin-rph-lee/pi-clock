@@ -298,25 +298,21 @@ for i in range(1,45):
 
 current_weather_icon = ImageTk.PhotoImage(Image.open('icons/' + current_weather_icon_num + '.png'))
 
-#Updating time label
-def update_time():
+
+def update_time_date():
+    #Updating time/date/day labels in an infinite while loop
     while True:
+        #update time
         current_time = strftime('%I:%M:%S %p')
         clock_label.configure(text = current_time)
+        #update date
+        current_date = today_date.strftime("%d-%b-%Y")
+        lbl_date.configure(text = current_date)
+        #update day
+        current_day = today_date.strftime("%A")
+        lbl_day.configure(text = current_day)
+
         time.sleep(0.1)
-
-
-#Updating date label
-def update_date():
-    current_date = today_date.strftime("%d-%b-%Y")
-    lbl_date.configure(text = current_date)
-    lbl_date.after(80, update_date)
-
-#Updating day label
-def update_day():
-    current_day = today_date.strftime("%A")
-    lbl_day.configure(text = current_day)
-    lbl_day.after(80, update_date)  
 
 
 frm_datetime = Frame(root)
@@ -411,13 +407,9 @@ btn_screen_on.grid(row=0, column=0, sticky='w')
 btn_screen_off = Button(frm_screenblank, text="Screen Off", command=lambda: os.system("xset dpms 30 30 30"))
 btn_screen_off.grid(row=0, column=1, sticky='w')
 
-control_thread = Thread(target= update_time, daemon = True)
-control_thread.start()
-
-
-#updating date, time, and day
-# time_thread = thread.update_time()
-# print('Yes!')
+#running thread to update time/date/day of GUI
+update_time_date_thread = Thread(target= update_time_date, daemon = True)
+update_time_date_thread.start()
 
 
 root.mainloop()
