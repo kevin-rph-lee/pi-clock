@@ -8,6 +8,7 @@ import calendar
 from PIL import ImageTk, Image
 import pendulum
 import sched, time
+from threading import Thread
 
 load_dotenv()
 
@@ -299,9 +300,12 @@ current_weather_icon = ImageTk.PhotoImage(Image.open('icons/' + current_weather_
 
 #Updating time label
 def update_time():
-    current_time = strftime('%I:%M:%S %p')
-    clock_label.configure(text = current_time)
-    clock_label.after(80, update_time)
+    while True:
+        current_time = strftime('%I:%M:%S %p')
+        clock_label.configure(text = current_time)
+        time.sleep(0.1)
+
+
 #Updating date label
 def update_date():
     current_date = today_date.strftime("%d-%b-%Y")
@@ -397,17 +401,6 @@ frm_screenblank = Frame(root)
 frm_screenblank.grid(row=2, column=0, sticky='w')
 
 
-
-
-
-
-
-
-
-
-
-
-
 #Button to turn screenblank to 1 h 30 m
 
 btn_screen_on = Button(frm_screenblank, text="Screen On", command=lambda: os.system("xset dpms 7800 7800 7800"))
@@ -418,12 +411,13 @@ btn_screen_on.grid(row=0, column=0, sticky='w')
 btn_screen_off = Button(frm_screenblank, text="Screen Off", command=lambda: os.system("xset dpms 30 30 30"))
 btn_screen_off.grid(row=0, column=1, sticky='w')
 
+control_thread = Thread(target= update_time, daemon = True)
+control_thread.start()
+
+
 #updating date, time, and day
-update_time()
-update_date()
-update_day()
+# time_thread = thread.update_time()
+# print('Yes!')
 
 
 root.mainloop()
-
-
