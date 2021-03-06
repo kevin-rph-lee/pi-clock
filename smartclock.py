@@ -14,7 +14,7 @@ load_dotenv()
 #Getting API key from ENV file
 api_key = os.getenv('API')
 #Creating weekday abbreviations
-weekDays = ("M ","Tu","W ","Th","F ","Sa","Su")
+weekDays = ("Monday ","Tuesday","Wednesday ","Thursday","Friday ","Saturday","Sunday")
 
 def get_current():
     #Getting current weather from API
@@ -373,15 +373,18 @@ def update_api():
 
 #Begin create GUI
 root = Tk()
-root.geometry("550x480")
+root.geometry("620x480")
+
 root.grid_rowconfigure(1, weight=0)
 root.grid_rowconfigure(1, weight=0)
 root.grid_columnconfigure(1, weight=0)
 root.grid_columnconfigure(0, weight=0)
+root.configure(bg='#23272A')
 
 #Time/Date/Day Frame
 frm_datetime = Frame(root)
 frm_datetime.grid(row=0, column=0, sticky='w')
+frm_datetime.configure(bg='#23272A')
 
 clock_label = Label(frm_datetime, bg="green", fg="white", font = ("Times", 40, 'bold'), relief='flat')
 clock_label.grid(row=0, column=0, sticky='w')
@@ -392,12 +395,27 @@ lbl_date.grid(column = 0, row= 1)
 lbl_day = Label(frm_datetime, bg="green", fg="white", font = ("Times", 30, 'bold'), relief='flat')
 lbl_day.grid(column = 0, row= 2)
 
+
+#Sunrise/Sunset frame
+
+frm_sunrise_sunset = Frame(frm_datetime)
+frm_sunrise_sunset.grid(row=3, column=0, sticky='w')
+
+lbl_sunrise = Label(frm_sunrise_sunset)
+lbl_sunrise.grid(row=0 ,column=0, sticky=NW)
+
+lbl_sunset = Label(frm_sunrise_sunset)
+lbl_sunset.grid(row=1 ,column=0, sticky=NW)
+
+
 #Weather Frame
 
 #Current Weather
 
 frm_weather = Frame(root)
 frm_weather.grid(row=0, column=2, sticky=NW)
+frm_weather.configure(bg='#23272A')
+
 
 lbl_weather_current = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_weather_current.grid(row=0,column=0, sticky=NW)
@@ -462,16 +480,7 @@ lbl_weather_day_4_img.grid(row=10,column=2, sticky=NW)
 lbl_weather_night_4_img = Label(frm_weather)
 lbl_weather_night_4_img.grid(row=10,column=3, sticky=NW)
 
-#Sunrise/Sunset frame
 
-frm_sunrise_sunset = Frame(root)
-frm_sunrise_sunset.grid(row=1, column=0, sticky='w')
-
-lbl_sunrise = Label(frm_sunrise_sunset)
-lbl_sunrise.grid(row=0 ,column=0, sticky=NW)
-
-lbl_sunset = Label(frm_sunrise_sunset)
-lbl_sunset.grid(row=1 ,column=0, sticky=NW)
 
 #Screnblank frame
 
