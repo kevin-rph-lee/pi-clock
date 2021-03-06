@@ -80,12 +80,12 @@ def get_forecast():
                 "EpochDate": 1614178800,
                 "Temperature": {
                     "Minimum": {
-                    "Value": 0.0,
+                    "Value": 00.0,
                     "Unit": "C",
                     "UnitType": 17
                     },
                     "Maximum": {
-                    "Value": 0.0,
+                    "Value": 00.0,
                     "Unit": "C",
                     "UnitType": 17
                     }
@@ -113,12 +113,12 @@ def get_forecast():
                 "EpochDate": 1614265200,
                 "Temperature": {
                     "Minimum": {
-                    "Value": 0.0,
+                    "Value": 00.0,
                     "Unit": "C",
                     "UnitType": 17
                     },
                     "Maximum": {
-                    "Value": 0.0,
+                    "Value": 00.0,
                     "Unit": "C",
                     "UnitType": 17
                     }
@@ -144,12 +144,12 @@ def get_forecast():
                 "EpochDate": 1614351600,
                 "Temperature": {
                     "Minimum": {
-                    "Value": 0.0,
+                    "Value": 00.0,
                     "Unit": "C",
                     "UnitType": 17
                     },
                     "Maximum": {
-                    "Value": 0.0,
+                    "Value": 00.0,
                     "Unit": "C",
                     "UnitType": 17
                     }
@@ -175,12 +175,12 @@ def get_forecast():
                 "EpochDate": 1614438000,
                 "Temperature": {
                     "Minimum": {
-                    "Value": 0.0,
+                    "Value": 00.0,
                     "Unit": "C",
                     "UnitType": 17
                     },
                     "Maximum": {
-                    "Value": 0.0,
+                    "Value": 00.0,
                     "Unit": "C",
                     "UnitType": 17
                     }
@@ -208,12 +208,12 @@ def get_forecast():
                 "EpochDate": 1614524400,
                 "Temperature": {
                     "Minimum": {
-                    "Value": 0.0,
+                    "Value": 00.0,
                     "Unit": "C",
                     "UnitType": 17
                     },
                     "Maximum": {
-                    "Value": 0.0,
+                    "Value": 00.0,
                     "Unit": "C",
                     "UnitType": 17
                     }
@@ -331,26 +331,39 @@ def update_api():
         lbl_weather_current.configure(text =  'NAO: ' + str(current_temperature))
         lbl_weather_current_img.configure(image = current_weather_icon)
 
-        lbl_weather0.configure(text= forecast['day_of_week0'] + '= High: ' + forecast['temp_high0'] + ' Low: ' + forecast['temp_low0'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        # lbl_high0.configure(text= forecast['temp_high0'] + ' Low: ' + forecast['temp_low0'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_day0.configure(text= forecast['day_of_week0'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_high0.configure(text= forecast['temp_high0'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_low0.configure(text= forecast['temp_low0'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
         lbl_weather_day_0_img.configure(image = icons[forecast['icon_day0']])
         lbl_weather_night_0_img.configure(image =  icons[forecast['icon_night0']])
 
-        lbl_weather1.configure(text= forecast['day_of_week1'] + '= High: ' + forecast['temp_high1'] + ' Low: ' + forecast['temp_low1'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_day1.configure(text= forecast['day_of_week1'], bg="blue", fg="white", font = ("Times", 10, 'bold'))   
+        lbl_high1.configure(text= forecast['temp_high1'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_low1.configure(text= forecast['temp_low1'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
         lbl_weather_day_1_img.configure(image = icons[forecast['icon_day1']])
         lbl_weather_night_1_img.configure(image =  icons[forecast['icon_night1']])
 
-        lbl_weather2.configure(text= forecast['day_of_week2'] + '= High: ' + forecast['temp_high2'] + ' Low: ' + forecast['temp_low2'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_day2.configure(text= forecast['day_of_week2'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_high2.configure(text= forecast['temp_high2'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_low2.configure(text= forecast['temp_low2'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
         lbl_weather_day_2_img.configure(image = icons[forecast['icon_day2']])
         lbl_weather_night_2_img.configure(image =  icons[forecast['icon_night2']])
 
-        lbl_weather3.configure(text= forecast['day_of_week3'] + '= High: ' + forecast['temp_high3'] + ' Low: ' + forecast['temp_low3'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_day3.configure(text= forecast['day_of_week3'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_high3.configure(text= forecast['temp_high3'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_low3.configure(text= forecast['temp_low3'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
         lbl_weather_day_3_img.configure(image = icons[forecast['icon_day3']])
         lbl_weather_night_3_img.configure(image =  icons[forecast['icon_night3']])
 
-        lbl_weather4.configure(text= forecast['day_of_week4'] + '= High: ' + forecast['temp_high4'] + ' Low: ' + forecast['temp_low4'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_day4.configure(text= forecast['day_of_week4'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_high4.configure(text= forecast['temp_high4'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_low4.configure(text= forecast['temp_low4'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
         lbl_weather_day_4_img.configure(image = icons[forecast['icon_day4']])
         lbl_weather_night_4_img.configure(image =  icons[forecast['icon_night4']])
-        
+
+
+
         #update sunrise/sunset 
         lbl_sunrise.configure(text= 'Sunrise: ' + sunrise_pst_str)
         lbl_sunset.configure(text= 'Sunset: ' + sunset_pst_str)
@@ -360,7 +373,7 @@ def update_api():
 
 #Begin create GUI
 root = Tk()
-root.geometry("500x480")
+root.geometry("550x480")
 root.grid_rowconfigure(1, weight=0)
 root.grid_rowconfigure(1, weight=0)
 root.grid_columnconfigure(1, weight=0)
@@ -370,7 +383,7 @@ root.grid_columnconfigure(0, weight=0)
 frm_datetime = Frame(root)
 frm_datetime.grid(row=0, column=0, sticky='w')
 
-clock_label = Label(frm_datetime, bg="green", fg="white", font = ("Times", 30, 'bold'), relief='flat')
+clock_label = Label(frm_datetime, bg="green", fg="white", font = ("Times", 40, 'bold'), relief='flat')
 clock_label.grid(row=0, column=0, sticky='w')
 
 lbl_date = Label(frm_datetime, bg="green", fg="white", font = ("Times", 30, 'bold'), relief='flat')
@@ -394,50 +407,60 @@ lbl_weather_current_img.grid(row=0,column=1, sticky=NW)
 
 #Weather Forecast
 
-lbl_weather0 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
-lbl_weather0.grid(row=1,column=0, sticky=NW)
-
+lbl_day0 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_day0.grid(row=1,column=0, sticky=NW)
+lbl_high0 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_high0.grid(row=2,column=0, sticky=NW)
+lbl_low0 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_low0.grid(row=2,column=1, sticky=NW)
 lbl_weather_day_0_img = Label(frm_weather)
-lbl_weather_day_0_img.grid(row=1,column=1, sticky=NW)
-
+lbl_weather_day_0_img.grid(row=2,column=2, sticky=NW)
 lbl_weather_night_0_img = Label(frm_weather)
-lbl_weather_night_0_img.grid(row=1,column=2, sticky=NW)
+lbl_weather_night_0_img.grid(row=2,column=3, sticky=NW)
 
-lbl_weather1 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
-lbl_weather1.grid(row=2,column=0, sticky=NW)
-
+lbl_day1 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_day1.grid(row=3,column=0, sticky=NW)
+lbl_high1 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_high1.grid(row=4,column=0, sticky=NW)
+lbl_low1 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_low1.grid(row=4,column=1, sticky=NW)
 lbl_weather_day_1_img = Label(frm_weather)
-lbl_weather_day_1_img.grid(row=2,column=1, sticky=NW)
-
+lbl_weather_day_1_img.grid(row=4,column=2, sticky=NW)
 lbl_weather_night_1_img = Label(frm_weather)
-lbl_weather_night_1_img.grid(row=2,column=2, sticky=NW)
+lbl_weather_night_1_img.grid(row=4,column=3, sticky=NW)
 
-lbl_weather2 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
-lbl_weather2.grid(row=3,column=0, sticky=NW)
-
+lbl_day2 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_day2.grid(row=5,column=0, sticky=NW)
+lbl_high2 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_high2.grid(row=6,column=0, sticky=NW)
+lbl_low2 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_low2.grid(row=6,column=1, sticky=NW)
 lbl_weather_day_2_img = Label(frm_weather)
-lbl_weather_day_2_img.grid(row=3,column=1, sticky=NW)
-
+lbl_weather_day_2_img.grid(row=6,column=2, sticky=NW)
 lbl_weather_night_2_img = Label(frm_weather)
-lbl_weather_night_2_img.grid(row=3,column=2, sticky=NW)
+lbl_weather_night_2_img.grid(row=6,column=3, sticky=NW)
 
-lbl_weather3 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
-lbl_weather3.grid(row=4,column=0, sticky=NW)
-
+lbl_day3 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_day3.grid(row=7,column=0, sticky=NW)
+lbl_high3 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_high3.grid(row=8,column=0, sticky=NW)
+lbl_low3 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_low3.grid(row=8,column=1, sticky=NW)
 lbl_weather_day_3_img = Label(frm_weather)
-lbl_weather_day_3_img.grid(row=4,column=1, sticky=NW)
-
+lbl_weather_day_3_img.grid(row=8,column=2, sticky=NW)
 lbl_weather_night_3_img = Label(frm_weather)
-lbl_weather_night_3_img.grid(row=4,column=2, sticky=NW)
+lbl_weather_night_3_img.grid(row=8,column=3, sticky=NW)
 
-lbl_weather4 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
-lbl_weather4.grid(row=5,column=0, sticky=NW)
-
+lbl_day4 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_day4.grid(row=9,column=0, sticky=NW)
+lbl_high4 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_high4.grid(row=10,column=0, sticky=NW)
+lbl_low4 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_low4.grid(row=10,column=1, sticky=NW)
 lbl_weather_day_4_img = Label(frm_weather)
-lbl_weather_day_4_img.grid(row=5,column=1, sticky=NW)
-
+lbl_weather_day_4_img.grid(row=10,column=2, sticky=NW)
 lbl_weather_night_4_img = Label(frm_weather)
-lbl_weather_night_4_img.grid(row=5,column=2, sticky=NW)
+lbl_weather_night_4_img.grid(row=10,column=3, sticky=NW)
 
 #Sunrise/Sunset frame
 
