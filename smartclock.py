@@ -332,9 +332,9 @@ def update_api():
         lbl_weather_current_img.configure(image = current_weather_icon)
 
         # lbl_high0.configure(text= forecast['temp_high0'] + ' Low: ' + forecast['temp_low0'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
-        lbl_day0.configure(text= forecast['day_of_week0'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
-        lbl_high0.configure(text= forecast['temp_high0'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
-        lbl_low0.configure(text= forecast['temp_low0'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
+        lbl_day0.configure(text= forecast['day_of_week0'])
+        lbl_high0.configure(text= forecast['temp_high0'])
+        lbl_low0.configure(text= forecast['temp_low0'])
         lbl_weather_day_0_img.configure(image = icons[forecast['icon_day0']])
         lbl_weather_night_0_img.configure(image =  icons[forecast['icon_night0']])
 
@@ -365,8 +365,8 @@ def update_api():
 
 
         #update sunrise/sunset 
-        lbl_sunrise.configure(text= 'Sunrise: ' + sunrise_pst_str)
-        lbl_sunset.configure(text= 'Sunset: ' + sunset_pst_str)
+        lbl_sunrise.configure(text= '🌅 ' + sunrise_pst_str)
+        lbl_sunset.configure(text= '🌇 ' + sunset_pst_str)
 
         #sleep for an hour
         time.sleep(3600) 
@@ -386,7 +386,7 @@ frm_datetime = Frame(root)
 frm_datetime.grid(row=0, column=0, sticky='w')
 frm_datetime.configure(bg='#23272A')
 
-clock_label = Label(frm_datetime, bg="green", fg="white", font = ("Times", 40, 'bold'), relief='flat')
+clock_label = Label(frm_datetime, bg="green", fg="white", font = ("Alarm Clock", 40, 'bold'), relief='flat')
 clock_label.grid(row=0, column=0, sticky='w')
 
 lbl_date = Label(frm_datetime, bg="green", fg="white", font = ("Times", 30, 'bold'), relief='flat')
@@ -422,19 +422,22 @@ lbl_weather_current.grid(row=0,column=0, sticky=NW)
 
 lbl_weather_current_img = Label(frm_weather)
 lbl_weather_current_img.grid(row=0,column=1, sticky=NW)
+lbl_weather_current_img.configure(bg='#23272A')
 
 #Weather Forecast
 
 lbl_day0 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_day0.grid(row=1,column=0, sticky=NW)
-lbl_high0 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_high0 = Label(frm_weather, bg="#FF4500", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_high0.grid(row=2,column=0, sticky=NW)
 lbl_low0 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_low0.grid(row=2,column=1, sticky=NW)
 lbl_weather_day_0_img = Label(frm_weather)
 lbl_weather_day_0_img.grid(row=2,column=2, sticky=NW)
+lbl_weather_day_0_img.configure(bg='#23272A')
 lbl_weather_night_0_img = Label(frm_weather)
 lbl_weather_night_0_img.grid(row=2,column=3, sticky=NW)
+lbl_weather_night_0_img.configure(bg='#23272A')
 
 lbl_day1 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_day1.grid(row=3,column=0, sticky=NW)
@@ -444,8 +447,10 @@ lbl_low1 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'
 lbl_low1.grid(row=4,column=1, sticky=NW)
 lbl_weather_day_1_img = Label(frm_weather)
 lbl_weather_day_1_img.grid(row=4,column=2, sticky=NW)
+lbl_weather_day_1_img.configure(bg='#23272A')
 lbl_weather_night_1_img = Label(frm_weather)
 lbl_weather_night_1_img.grid(row=4,column=3, sticky=NW)
+lbl_weather_night_1_img.configure(bg='#23272A')
 
 lbl_day2 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_day2.grid(row=5,column=0, sticky=NW)
@@ -455,8 +460,10 @@ lbl_low2 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'
 lbl_low2.grid(row=6,column=1, sticky=NW)
 lbl_weather_day_2_img = Label(frm_weather)
 lbl_weather_day_2_img.grid(row=6,column=2, sticky=NW)
+lbl_weather_day_2_img.configure(bg='#23272A')
 lbl_weather_night_2_img = Label(frm_weather)
 lbl_weather_night_2_img.grid(row=6,column=3, sticky=NW)
+lbl_weather_night_2_img.configure(bg='#23272A')
 
 lbl_day3 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_day3.grid(row=7,column=0, sticky=NW)
@@ -466,8 +473,10 @@ lbl_low3 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'
 lbl_low3.grid(row=8,column=1, sticky=NW)
 lbl_weather_day_3_img = Label(frm_weather)
 lbl_weather_day_3_img.grid(row=8,column=2, sticky=NW)
+lbl_weather_day_3_img.configure(bg='#23272A')
 lbl_weather_night_3_img = Label(frm_weather)
 lbl_weather_night_3_img.grid(row=8,column=3, sticky=NW)
+lbl_weather_night_3_img.configure(bg='#23272A')
 
 lbl_day4 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
 lbl_day4.grid(row=9,column=0, sticky=NW)
@@ -477,9 +486,10 @@ lbl_low4 = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'
 lbl_low4.grid(row=10,column=1, sticky=NW)
 lbl_weather_day_4_img = Label(frm_weather)
 lbl_weather_day_4_img.grid(row=10,column=2, sticky=NW)
+lbl_weather_day_4_img.configure(bg='#23272A')
 lbl_weather_night_4_img = Label(frm_weather)
 lbl_weather_night_4_img.grid(row=10,column=3, sticky=NW)
-
+lbl_weather_night_4_img.configure(bg='#23272A')
 
 
 #Screnblank frame
