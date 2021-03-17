@@ -252,8 +252,9 @@ def update_time_date():
         today_date = date.today()
 
         #update time
-        current_time = strftime('%I:%M:%S %p')
-        clock_label.configure(text = current_time)
+        current_time = strftime('%I:%M:%S')
+        lbl_time.configure(text = current_time)
+        lbl_AMPM.configure(text= strftime('%p'))
         #update date
         current_date = today_date.strftime("%d %b %Y")
         lbl_date.configure(text = current_date)
@@ -328,7 +329,7 @@ def update_api():
             print('Day ' + str(x) + ' ' + forecast['temp_high0'] + ' ' + forecast['temp_low0'])
 
         #update current wather
-        lbl_weather_current.configure(text =  'NAO: ' + str(current_temperature))
+        lbl_weather_current.configure(text = str(current_temperature))
         lbl_weather_current_img.configure(image = current_weather_icon)
 
         # lbl_high0.configure(text= forecast['temp_high0'] + ' Low: ' + forecast['temp_low0'], bg="blue", fg="white", font = ("Times", 10, 'bold'))
@@ -373,7 +374,7 @@ def update_api():
 
 #Begin create GUI
 root = Tk()
-root.geometry("620x480")
+root.geometry("650x480")
 
 root.grid_rowconfigure(1, weight=0)
 root.grid_rowconfigure(1, weight=0)
@@ -386,15 +387,24 @@ frm_datetime = Frame(root)
 frm_datetime.grid(row=0, column=0, sticky='w')
 frm_datetime.configure(bg='#23272A')
 
-clock_label = Label(frm_datetime, fg="white", font = ("Alarm Clock", 40, 'bold'), relief='flat')
-clock_label.grid(row=0, column=0, sticky='w')
-clock_label.configure(bg='#23272A')
+frm_time = Frame(frm_datetime)
+frm_time.grid(row=0, column=0, sticky='w')
+frm_time.configure(bg='#23272A')
 
-lbl_date = Label(frm_datetime, fg="white", font = ("Times", 30, 'bold'), relief='flat')
+lbl_time = Label(frm_time, fg="#41FF00", font = ("Alarm Clock", 50, 'bold'), relief='flat')
+lbl_time.grid(row=0, column=0, sticky='w')
+lbl_time.configure(bg='#23272A')
+
+lbl_AMPM = Label(frm_time, fg="#41FF00", font = ("Alarm Clock", 15, 'bold'), relief='flat')
+lbl_AMPM.grid(row=0, column=1, sticky='s', padx= (0,30))
+lbl_AMPM.configure(bg='#23272A')
+
+
+lbl_date = Label(frm_datetime, fg="#41FF00", font = ("Times", 30, 'bold'), relief='flat')
 lbl_date.grid(column = 0, row= 1)
 lbl_date.configure(bg='#23272A')
 
-lbl_day = Label(frm_datetime, fg="white", font = ("Times", 30, 'bold'), relief='flat')
+lbl_day = Label(frm_datetime, fg="#41FF00", font = ("Times", 30, 'bold'), relief='flat')
 lbl_day.grid(column = 0, row= 2)
 lbl_day.configure(bg='#23272A')
 
@@ -420,7 +430,7 @@ frm_weather.grid(row=0, column=2, sticky=NW)
 frm_weather.configure(bg='#23272A')
 
 
-lbl_weather_current = Label(frm_weather, bg="blue", fg="white", font = ("Times", 10, 'bold'), relief='flat')
+lbl_weather_current = Label(frm_weather, bg="#23272A", fg="white", font = ("Times", 25, 'bold'),  borderwidth= 5, relief="groove")
 lbl_weather_current.grid(row=0,column=0, sticky=NW)
 
 lbl_weather_current_img = Label(frm_weather)
