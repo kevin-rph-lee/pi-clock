@@ -374,7 +374,7 @@ def update_api():
 
 #Begin create GUI
 root = Tk()
-root.geometry("650x480")
+root.geometry("670x480")
 
 root.grid_rowconfigure(1, weight=0)
 root.grid_rowconfigure(1, weight=0)
@@ -388,15 +388,15 @@ frm_datetime.grid(row=0, column=0, sticky='w')
 frm_datetime.configure(bg='#23272A')
 
 frm_time = Frame(frm_datetime)
-frm_time.grid(row=0, column=0, sticky='w')
+frm_time.grid(row=0, column=0)
 frm_time.configure(bg='#23272A')
 
 lbl_time = Label(frm_time, fg="white", font = ("Arial", 50, 'bold'), relief='flat')
-lbl_time.grid(row=0, column=0, sticky='w')
+lbl_time.grid(row=0, column=0, sticky='w', padx= (20,0))
 lbl_time.configure(bg='#23272A')
 
 lbl_AMPM = Label(frm_time, fg="white", font = ("Arial", 15, 'bold'), relief='flat')
-lbl_AMPM.grid(row=0, column=1, sticky='s', padx= (0,30))
+lbl_AMPM.grid(row=0, column=1, sticky='s', padx= (0,20))
 lbl_AMPM.configure(bg='#23272A')
 
 
